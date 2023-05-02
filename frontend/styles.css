@@ -36,11 +36,21 @@ body {
     grid-template-columns: 5fr 2fr 1fr 1fr;
 }
 
+
 main {
     width: 30%;
     height: 95%;
 
     background-image: linear-gradient(to bottom, rgba(10,10,10,0.1) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+@media only screen and (max-width: 1550px) {
+    .inventory {
+        width: 100%;
+    }
+    main {
+        width: 100%;
+    }
 }
 
 /** QUEST LIST PAGE **/
