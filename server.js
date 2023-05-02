@@ -28,6 +28,13 @@ app.use(express.static(__dirname + "/frontend"))
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/frontend/index.html")
 })
+app.get("/commission", (req, res) => {
+    res.sendFile(__dirname + "/frontend/index.html")
+})
+app.get("/quests/:id", (req, res) => {
+    const id = req.params["id"]
+    res.sendFile(__dirname + "/frontend/index.html")
+})
 
 io.on("connection", (socket) => {
     console.log("someone connected")

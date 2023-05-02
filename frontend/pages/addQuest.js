@@ -1,7 +1,6 @@
-import { redirect, routes } from "../router.js"
+import { navigateToRoute } from "../routing.js"
 import { sendSocketEvent } from "../socket.js"
 import {PAGE, clearPage, createInventoryElement} from "./common.js"
-import { renderQuestList } from "./questList.js"
 
 function createTitleInputElement() {
     const titleInput = document.createElement("input")
@@ -96,6 +95,7 @@ function createSubmitElement() {
 }
 
 function sendQuestData(titleElement, descriptionElement, objectivesListElement) {
+    // TODO: check required fields. just return and add red border class to missing input
     const title = titleElement.value
     const description = descriptionElement.value
     const objectives = []
@@ -139,7 +139,7 @@ function createNewQuestElement() {
     submit.addEventListener("click", () => {
         // TODO: input checking
         sendQuestData(titleInput, descriptionInput, objectivesList)
-        redirect(routes.questList)
+        navigateToRoute("")
     })
 
     newQuestElement.append(...[titleInput, descriptionInput, objectivesTitle, objectivesList, rewards, submit])

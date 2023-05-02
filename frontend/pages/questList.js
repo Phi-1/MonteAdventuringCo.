@@ -1,5 +1,5 @@
 import { questData } from "../questData.js"
-import { redirect, routes } from "../router.js"
+import { navigateToRoute } from "../routing.js"
 import {PAGE, clearPage, createInventoryElement} from "./common.js"
 
 function createQuestListElement() {
@@ -45,7 +45,7 @@ function createAddQuestElement() {
     addQuest.classList.add("add-quest-button")
 
     addQuest.addEventListener("click", (event) => {
-        redirect(routes.addQuest)
+        navigateToRoute("commission")
     })
 
     return addQuest

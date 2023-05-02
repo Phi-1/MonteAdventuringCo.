@@ -10,7 +10,6 @@ function clearPage() {
 
 function createInventoryElement() {
     const xp = questData.inventory.xp
-    console.log(xp)
     const epic = questData.inventory.epic
     const rare = questData.inventory.rare
 

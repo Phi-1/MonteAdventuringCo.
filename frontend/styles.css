@@ -198,6 +198,7 @@ input#rare-reward {
 .view-quest-rewards > li {
     display: inline-block;
     list-style: none;
+    margin-left: 0.4rem;
 }
 
 .view-quest-xp-reward {
