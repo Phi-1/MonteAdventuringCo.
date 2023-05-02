@@ -8,9 +8,13 @@ function createQuestListElement() {
     return questList
 }
 
-function createQuestElement(title, xp, epic, rare) {
+function createQuestElement(id, title, xp, epic, rare) {
     const quest = document.createElement("div")
     quest.classList.add("quest")
+
+    quest.addEventListener("click", (event) => {
+        navigateToRoute(`quests/${id}`)
+    })
 
     const questTitle = document.createElement("span")
     questTitle.classList.add("quest-title")
@@ -61,10 +65,11 @@ export function renderQuestList(quests) {
     PAGE.appendChild(addQuest)
 
     for (let quest in questData.quests) {
+        const id = quest
         const title = questData.quests[quest]["title"]
         const xp = questData.quests[quest]["rewards"]["xp"]
         const epic = questData.quests[quest]["rewards"]["epic"]
         const rare = questData.quests[quest]["rewards"]["rare"]
-        questList.appendChild(createQuestElement(title, xp, epic, rare))
+        questList.appendChild(createQuestElement(id, title, xp, epic, rare))
     }
 }

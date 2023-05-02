@@ -1,4 +1,6 @@
 import { questData } from "../questData.js";
+import { navigateToRoute } from "../routing.js";
+import { sendSocketEvent } from "../socket.js";
 import { PAGE, clearPage, createInventoryElement } from "./common.js";
 
 function createObjectivesListElement(questObjectives) {
@@ -19,7 +21,7 @@ function createObjectivesListElement(questObjectives) {
     return objectivesList
 }
 
-function createRewardsListElement(questRewards) {
+function createRewardsListElement(questID, questRewards) {
     const list = document.createElement("ul")
     list.classList.add("view-quest-rewards")
 
@@ -41,14 +43,17 @@ function createRewardsListElement(questRewards) {
     completeButton.classList.add("view-quest-complete-quest-button")
     completeButton.innerText = "Complete"
     completeButtonLi.appendChild(completeButton)
-    // TODO: complete quest functionality
+    completeButton.addEventListener("click", () => {
+        sendSocketEvent("complete_quest", { id: questID })
+        navigateToRoute("")
+    })
 
     list.append(...[xpReward, epicReward, rareReward, completeButtonLi])
 
     return list
 }
 
-function createMainElement(questTitle, questDescription, questObjectives, questRewards) {
+function createMainElement(questID, questTitle, questDescription, questObjectives, questRewards) {
     const main = document.createElement("main")
     main.classList.add("view-quest")
 
@@ -62,7 +67,7 @@ function createMainElement(questTitle, questDescription, questObjectives, questR
 
     const objectivesList = createObjectivesListElement(questObjectives)
 
-    const rewardsList = createRewardsListElement(questRewards)
+    const rewardsList = createRewardsListElement(questID, questRewards)
 
     main.append(...[title, description, objectivesList, rewardsList])
     return main
@@ -72,6 +77,6 @@ export function renderViewQuest(questID) {
     clearPage()
     const inventory = createInventoryElement()
     PAGE.appendChild(inventory)
-    const main = createMainElement(questData.quests[questID].title, questData.quests[questID].description, questData.quests[questID].objectives, questData.quests[questID].rewards)
+    const main = createMainElement(questID, questData.quests[questID].title, questData.quests[questID].description, questData.quests[questID].objectives, questData.quests[questID].rewards)
     PAGE.appendChild(main)
 }

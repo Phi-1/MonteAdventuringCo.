@@ -66,6 +66,15 @@ const database = (() => {
             }
 
             saveData()
+        },
+        completeQuest: (id) => {
+            if (!id in dbData.quests) return
+            const rewards = dbData.quests[id]["rewards"]
+            dbData.inventory.xp = `${parseInt(dbData.inventory.xp) + parseInt(rewards.xp)}`
+            dbData.inventory.epic = `${parseInt(dbData.inventory.epic) + parseInt(rewards.epic)}`
+            dbData.inventory.rare = `${parseInt(dbData.inventory.rare) + parseInt(rewards.rare)}`
+            delete dbData.quests[id]
+            saveData()
         }
     }
 })()

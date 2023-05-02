@@ -47,6 +47,11 @@ io.on("connection", (socket) => {
         const questData = database.getData()
         io.emit("update", questData)
     })
+    socket.on("complete_quest", (data) => {
+        const id = data["id"]
+        database.completeQuest(id) // TODO: error checking
+        io.emit("update", database.getData())
+    })
 })
 
 function main() {
