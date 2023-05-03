@@ -37,7 +37,6 @@ app.get("/quests/:id", (req, res) => {
 })
 
 io.on("connection", (socket) => {
-    console.log("someone connected")
     socket.on("add_quest", (data) => {
         database.addQuest(data.title, data.description, data.objectives, data.rewards)
         const questData = database.getData()
@@ -46,6 +45,13 @@ io.on("connection", (socket) => {
     socket.on("request_update", () => {
         const questData = database.getData()
         io.emit("update", questData)
+    })
+    socket.on("set_objective_state", (data) => {
+        const questID = data["questID"]
+        const objectiveIndex = data["objective"]
+        const completed = data["completed"]
+        database.setObjectiveState(questID, objectiveIndex, completed)
+        io.emit("update", database.getData())
     })
     socket.on("complete_quest", (data) => {
         const id = data["id"]

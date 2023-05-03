@@ -67,6 +67,11 @@ const database = (() => {
 
             saveData()
         },
+        setObjectiveState: (questID, objectiveIndex, completed) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].objectives[objectiveIndex].completed = completed
+            saveData()
+        },
         completeQuest: (id) => {
             if (!id in dbData.quests) return
             const rewards = dbData.quests[id]["rewards"]

@@ -182,6 +182,12 @@ input#rare-reward {
     text-align: end;
 }
 
+.view-quest-objective:last-child {
+    font-weight: 200;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+}
+
 .view-quest-objective.objective-complete {
     text-decoration: line-through;
 }

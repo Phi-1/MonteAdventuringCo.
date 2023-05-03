@@ -6,6 +6,7 @@ import { renderViewQuest } from "./pages/viewQuest.js"
 import { renderAddQuest } from "./pages/addQuest.js"
 
 function onDataUpdate(data) {
+    // TODO: just pass questData into render functions instead of keeping globals
     questData.quests = data["quests"]
     questData.inventory = data["inventory"]
     questData.activeQuest = data["activeQuest"]
