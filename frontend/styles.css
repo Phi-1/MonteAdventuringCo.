@@ -53,6 +53,45 @@ main {
     }
 }
 
+/* TODO: options menu that can be summoned anywehre on page */
+.options-menu {
+    --xPos: 0px;
+    --yPos: 0px;
+    --nCols: 1;
+
+    position: fixed;
+    left: var(--xPos);
+    top: var(--yPos);
+
+    display: grid;
+    grid-template-columns: repeat(var(--nCols), 1fr);
+    grid-template-rows: 1fr;
+
+    background-color: var(--c1);
+    box-shadow: 0 0 8px 1px rgba(0,0,0,0.1);
+
+    translate: -50% -100%;
+    scale: 0;
+    animation: scale-in-menu 80ms linear forwards;
+}
+@keyframes scale-in-menu {
+    from {
+        scale: 0;
+        opacity: 0;
+    }
+    to {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+.options-menu-option {
+    padding: 0.6rem;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
 /** QUEST LIST PAGE **/
 
 .quest-list {
@@ -173,6 +212,9 @@ input#rare-reward {
 
 .view-quest-objectives {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 
 .view-quest-objective {
@@ -180,12 +222,23 @@ input#rare-reward {
     padding: 0.4rem 0;
     font-weight: 600;
     text-align: end;
+    cursor: pointer;
 }
 
 .view-quest-objective:last-child {
     font-weight: 200;
     color: rgba(255, 255, 255, 0.4);
     cursor: pointer;
+}
+
+input.view-quest-objective[type="text"] {
+    padding: 0.4rem 0;
+    background-color: var(--c1);
+    text-align: left;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    cursor: default;
 }
 
 .view-quest-objective.objective-complete {

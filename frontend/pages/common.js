@@ -37,4 +37,32 @@ function createInventoryElement() {
     return inventory
 }
 
-export {PAGE, clearPage, createInventoryElement}
+function createMenu(mouseX, mouseY, options, optionCallbacks) {
+    const menu = document.createElement("div")
+    menu.classList.add("options-menu")
+    menu.style.setProperty("--xPos", `${mouseX}px`)
+    menu.style.setProperty("--yPos", `${mouseY}px`)
+    menu.style.setProperty("--nCols", options.length)
+
+    PAGE.appendChild(menu)
+
+    setTimeout(() => {
+        options.forEach((optionText, index) => {
+            const optionElement = document.createElement("div")
+            optionElement.classList.add("options-menu-option")
+            optionElement.innerText = optionText
+            optionElement.addEventListener("click", () => {
+                optionCallbacks[index]()
+                menu.remove()
+            })
+            menu.appendChild(optionElement)
+        })
+    
+        window.addEventListener("click", () => {
+            if (!menu) return
+            menu.remove()
+        })
+    }, 10)
+}
+
+export {PAGE, clearPage, createInventoryElement, createMenu}

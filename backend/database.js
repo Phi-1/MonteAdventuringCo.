@@ -67,6 +67,16 @@ const database = (() => {
 
             saveData()
         },
+        editTitle: (questID, newTitle) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].title = newTitle
+            saveData()
+        },
+        editDescription: (questID, newDescription) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].description = newDescription
+            saveData()
+        },
         setObjectiveState: (questID, objectiveIndex, completed) => {
             if (!questID in dbData.quests) return
             dbData.quests[questID].objectives[objectiveIndex].completed = completed
@@ -79,6 +89,21 @@ const database = (() => {
             dbData.inventory.epic = `${parseInt(dbData.inventory.epic) + parseInt(rewards.epic)}`
             dbData.inventory.rare = `${parseInt(dbData.inventory.rare) + parseInt(rewards.rare)}`
             delete dbData.quests[id]
+            saveData()
+        },
+        addObjective: (questID, objectiveText) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].objectives.push({ text: objectiveText, completed: false })
+            saveData()
+        },
+        removeObjective: (questID, objectiveIndex) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].objectives.splice(objectiveIndex, 1)
+            saveData()
+        },
+        editObjective: (questID, objectiveIndex, newObjectiveText) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].objectives[objectiveIndex].text = newObjectiveText
             saveData()
         }
     }

@@ -1,7 +1,7 @@
 import { questData } from "../questData.js";
 import { navigateToRoute } from "../routing.js";
 import { sendSocketEvent } from "../socket.js";
-import { PAGE, clearPage, createInventoryElement } from "./common.js";
+import { PAGE, clearPage, createInventoryElement, createMenu } from "./common.js";
 
 function onTitleClick(questID, titleElement) {
     const currentTitle = titleElement.innerText
@@ -9,12 +9,26 @@ function onTitleClick(questID, titleElement) {
     titleInput.setAttribute("type", "text")
     titleInput.classList.add("view-quest-title")
     titleInput.value = currentTitle
+    titleInput.dataset["dataSent"] = false
+
     titleInput.addEventListener("focusout", () => {
+        if (titleInput.dataset["dataSent"] === "true") return
         const newTitleElement = createTitleElement()
         newTitleElement.innerText = titleInput.value
         titleInput.replaceWith(newTitleElement)
-        // TODO: send new title to server
+        sendSocketEvent("edit_title", { questID, title: titleInput.value })
     })
+    titleInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return
+        // TODO: dont allow only whitespace
+        if (titleInput.value === "") {
+            titleInput.replaceWith(titleElement)
+            return
+        }
+        sendSocketEvent("edit_title", { questID, title: titleInput.value })
+        titleInput.dataset["dataSent"] = true
+    })
+
     titleElement.replaceWith(titleInput)
     titleInput.focus()
 }
@@ -38,7 +52,7 @@ function onDescriptionClick(questID, descriptionElement) {
         const newDescriptionElement = createDescriptionElement()
         newDescriptionElement.innerText = descriptionInput.value
         descriptionInput.replaceWith(newDescriptionElement)
-        // TODO: send new description to server
+        sendSocketEvent("edit_description", { questID, description: descriptionInput.value })
     })
     descriptionElement.replaceWith(descriptionInput)
     descriptionInput.focus()
@@ -58,6 +72,63 @@ function onAddObjective(questID, objectivesListElement, addObjectiveElement) {
     const objectiveInput = document.createElement("input")
     objectiveInput.setAttribute("type", "text")
     objectiveInput.classList.add("view-quest-objective")
+    objectiveInput.dataset["dataSent"] = false
+
+    objectiveInput.addEventListener("focusout", () => {
+        if (objectiveInput.dataset["dataSent"] === "true") return
+        // TODO: dont allow text that is completely whitespace
+        if (objectiveInput.value === "") {
+            objectiveInput.replaceWith(addObjectiveElement)
+            return
+        }
+        sendSocketEvent("add_objective", { questID, objectiveText: objectiveInput.value })
+    })
+    objectiveInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return
+        if (objectiveInput.value === "") {
+            objectiveInput.replaceWith(addObjectiveElement)
+            return
+        }
+        sendSocketEvent("add_objective", { questID, objectiveText: objectiveInput.value })
+        objectiveInput.dataset["dataSent"] = true
+    })
+
+    addObjectiveElement.replaceWith(objectiveInput)
+    objectiveInput.focus()
+}
+
+function onEditObjective(questID, objectiveElement, objectiveIndex) {
+    const objectiveInput = document.createElement("input")
+    objectiveInput.setAttribute("type", "text")
+    objectiveInput.classList.add("view-quest-objective")
+    objectiveInput.value = objectiveElement.innerText
+    objectiveInput.dataset["dataSent"] = false
+
+    objectiveInput.addEventListener("focusout", () => {
+        if (objectiveInput.dataset["dataSent"] === "true") return
+        // TODO: dont allow text that is completely whitespace
+        if (objectiveInput.value === "") {
+            objectiveInput.replaceWith(objectiveElement)
+            return
+        }
+        sendSocketEvent("edit_objective", { questID, objectiveIndex, objectiveText: objectiveInput.value })
+    })
+    objectiveInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return
+        if (objectiveInput.value === "") {
+            objectiveInput.replaceWith(objectiveElement)
+            return
+        }
+        sendSocketEvent("edit_objective", { questID, objectiveIndex, objectiveText: objectiveInput.value })
+        objectiveInput.dataset["dataSent"] = true
+    })
+
+    objectiveElement.replaceWith(objectiveInput)
+    objectiveInput.focus()
+}
+
+function onDeleteObjective(questID, objectiveIndex) {
+    sendSocketEvent("delete_objective", {questID, objectiveIndex})
 }
 
 function createObjectivesListElement(questID, questObjectives) {
@@ -69,6 +140,12 @@ function createObjectivesListElement(questID, questObjectives) {
         li.classList.add("view-quest-objective")
         if (objective.completed) li.classList.add("objective-complete")
         li.innerText = objective.text
+
+        li.addEventListener("click", (event) => {
+            createMenu(event.clientX, event.clientY,
+                ["Edit", "Delete"],
+                [() => onEditObjective(questID, li, index), () => onDeleteObjective(questID, index)])
+        })
 
         const markComplete = document.createElement("div")
         markComplete.classList.add("view-quest-mark-objective-complete")

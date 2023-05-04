@@ -44,7 +44,19 @@ io.on("connection", (socket) => {
     })
     socket.on("request_update", () => {
         const questData = database.getData()
-        io.emit("update", questData)
+        socket.emit("update", questData)
+    })
+    socket.on("edit_title", (data) => {
+        const questID = data["questID"]
+        const title = data["title"]
+        database.editTitle(questID, title)
+        io.emit("update", database.getData())
+    })
+    socket.on("edit_description", (data) => {
+        const questID = data["questID"]
+        const description = data["description"]
+        database.editDescription(questID, description)
+        io.emit("update", database.getData())
     })
     socket.on("set_objective_state", (data) => {
         const questID = data["questID"]
@@ -56,6 +68,25 @@ io.on("connection", (socket) => {
     socket.on("complete_quest", (data) => {
         const id = data["id"]
         database.completeQuest(id) // TODO: error checking
+        io.emit("update", database.getData())
+    })
+    socket.on("edit_objective", (data) => {
+        const questID = data["questID"]
+        const objectiveIndex = data["objectiveIndex"]
+        const objectiveText = data["objectiveText"]
+        database.editObjective(questID, objectiveIndex, objectiveText)
+        io.emit("update", database.getData())
+    })
+    socket.on("add_objective", (data) => {
+        const questID = data["questID"]
+        const objectiveText = data["objectiveText"]
+        database.addObjective(questID, objectiveText)
+        io.emit("update", database.getData())
+    })
+    socket.on("delete_objective", (data) => {
+        const questID = data["questID"]
+        const objectiveIndex = data["objectiveIndex"]
+        database.removeObjective(questID, objectiveIndex)
         io.emit("update", database.getData())
     })
 })

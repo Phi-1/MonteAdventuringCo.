@@ -27,9 +27,9 @@ function createObjectivesListElement() {
     newObjectiveInput.setAttribute("type", "text")
     newObjectiveInput.setAttribute("placeholder", "Enter = add, period = remove")
 
-    window.addEventListener("keypress", (event) => {
+    newObjectiveInput.addEventListener("keypress", (event) => {
         // add objective
-        if (document.activeElement === newObjectiveInput && event.key === "Enter") {
+        if (event.key === "Enter") {
             const newObjective = document.createElement("li")
             newObjective.classList.add("quest-objective")
             newObjective.innerText = newObjectiveInput.value
@@ -38,7 +38,7 @@ function createObjectivesListElement() {
         }
 
         // remove objective
-        if (document.activeElement === newObjectiveInput && event.key === "." && newObjectiveInput.value === "") {
+        if (event.key === "." && newObjectiveInput.value === "") {
             const lastObjective = objectivesList.lastElementChild
             if (lastObjective.getAttribute("id") === "add-quest-objective") return
             objectivesList.removeChild(lastObjective)
