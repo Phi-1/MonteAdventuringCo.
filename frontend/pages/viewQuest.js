@@ -141,12 +141,6 @@ function createObjectivesListElement(questID, questObjectives) {
         if (objective.completed) li.classList.add("objective-complete")
         li.innerText = objective.text
 
-        li.addEventListener("click", (event) => {
-            createMenu(event.clientX, event.clientY,
-                ["Edit", "Delete"],
-                [() => onEditObjective(questID, li, index), () => onDeleteObjective(questID, index)])
-        })
-
         const markComplete = document.createElement("div")
         markComplete.classList.add("view-quest-mark-objective-complete")
         markComplete.addEventListener("click", () => {
@@ -156,8 +150,15 @@ function createObjectivesListElement(questID, questObjectives) {
                 sendSocketEvent("set_objective_state", { questID, objective: index , completed: true })
             }
         })
-
         li.appendChild(markComplete)
+
+        li.addEventListener("click", (event) => {
+            if (event.target === markComplete) return
+            createMenu(event.clientX, event.clientY,
+                ["Edit", "Delete"],
+                [() => onEditObjective(questID, li, index), () => onDeleteObjective(questID, index)])
+        })
+
         objectivesList.appendChild(li)
     })
 
