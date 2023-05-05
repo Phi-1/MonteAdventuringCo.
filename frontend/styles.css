@@ -9,6 +9,10 @@ body {
     overflow: hidden;
 }
 
+input, textarea {
+    all: unset;
+}
+
 :root {
     --cRare: #009ce4;
     --cEpic: #91009e;
@@ -42,6 +46,7 @@ main {
     height: 95%;
 
     background-image: linear-gradient(to bottom, rgba(10,10,10,0.1) 0%, rgba(0,0,0,0.3) 100%);
+    box-shadow: inset 0 0 32px rgba(0,0,0,0.1), 0 0 16px rgba(0,0,0,0.1);
 }
 
 @media only screen and (max-width: 1550px) {
@@ -157,32 +162,97 @@ main {
 /** NEW QUEST PAGE **/
 
 .new-quest {
-    border: 1px solid pink;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
 }
 
+.new-quest input, .new-quest textarea {
+    background-color: var(--c1);
+}
+
+.new-quest-title {
+    padding: 0.6rem;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.new-quest-description {
+    height: 8em;
+    padding: 0.6rem;
+    font-size: 1.2rem;
+    font-weight: 200;
+}
+
+.new-quest-objectives-title {
+    margin: 1rem 0 0.4rem 0.4rem;
+    font-size: 1.6rem;
+    font-weight: 200;
+    letter-spacing: 1px;
+}
+
+.new-quest-objectives {
+    list-style: armenian;
+}
+
+#add-quest-objective {
+    list-style: none;
+    background-image: none;
+}
+
+#add-quest-objective > input {
+    width: 60%;
+    padding: 0.4rem;
+    font-size: 1.2rem;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    box-shadow: inset 0 0 8px rgba(100,100,100,0.1);
+}
+
+.quest-objective {
+    margin: 0.2rem 0;
+    padding: 0.4rem;
+    background-image: linear-gradient(to right, var(--c1) 0%, rgba(0,0,0,0) 100%);
+}
+
+.new-quest-rewards {
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
 .new-quest-rewards > input {
+    all: unset;
     width: 3em;
+    margin: 0 0.4rem;
+    padding: 0.2rem 0.4rem;
     text-align: end;
     color: white;
+    font-size: 1.2rem;
     border: 2px solid #333;
     border-radius: 2px;
+    border: 1px solid white;
 }
 
 input#xp-reward {
-    background-color: #1a8a72;
+    background-color: rgba(0,0,0,0);
 }
 
 input#epic-reward {
-    background-color: #a934c0;
+    background-color: var(--cEpic);
 }
 
 input#rare-reward {
-    background-color: #4c62ac;
+    background-color: var(--cRare);
 }
 
 .new-quest-submit {
+    padding: 1.4rem;
+    background-color: var(--c1);
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 4px;
+    box-shadow: 0 16px 16px var(--c1);
     cursor: pointer;
 }
 
@@ -192,7 +262,7 @@ input#rare-reward {
 .view-quest {
     display: flex;
     flex-direction: column;
-    box-shadow: inset 0 0 32px rgba(0,0,0,0.1), 0 0 16px rgba(0,0,0,0.1);
+    overflow-y: scroll;
 }
 
 .view-quest-title {
