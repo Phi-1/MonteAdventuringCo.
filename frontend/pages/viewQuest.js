@@ -170,6 +170,47 @@ function createObjectivesListElement(questID, questObjectives) {
     return objectivesList
 }
 
+// TODO: for all editable elements, add colored border around element after completing edit,
+// so you can see when the server hasn't updated yet. Update event automatically clears border class
+function onEditReward(questID, rewardElement, rewardType) {
+    const rewardInput = document.createElement("input")
+    rewardInput.setAttribute("type", "text")
+    rewardInput.classList.add(`view-quest-${rewardType}-reward`)
+    rewardInput.dataset["dataSent"] = false
+    rewardInput.value = rewardElement.innerText.replace(/[a-zA-Z ]+/g, "")
+
+    rewardInput.addEventListener("focusout", () => {
+        if (rewardInput.dataset["dataSent"] === "true") return
+        if (rewardInput.value === "") {
+            rewardInput.replaceWith(rewardElement)
+            return
+        }
+        rewardInput.replaceWith(rewardElement)
+        // TODO: check input is numerical
+        sendSocketEvent("edit_reward", { questID, rewardType, rewardValue: rewardInput.value })
+        rewardInput.dataset["dataSent"] = true
+        rewardElement.innerText = `${rewardInput.value}`
+        if (rewardType === "xp") rewardElement.innerText += " XP"
+        rewardInput.replaceWith(rewardElement)
+    })
+    rewardInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return
+        if (rewardInput.value === "") {
+            rewardInput.replaceWith(rewardElement)
+            return
+        }
+        // TODO: check input is numerical
+        sendSocketEvent("edit_reward", { questID, rewardType, rewardValue: rewardInput.value })
+        rewardInput.dataset["dataSent"] = true
+        rewardElement.innerText = `${rewardInput.value}`
+        if (rewardType === "xp") rewardElement.innerText += " XP"
+        rewardInput.replaceWith(rewardElement)
+    })
+
+    rewardElement.replaceWith(rewardInput)
+    rewardInput.focus()
+}
+
 function createRewardsListElement(questID, questRewards) {
     const list = document.createElement("ul")
     list.classList.add("view-quest-rewards")
@@ -177,12 +218,14 @@ function createRewardsListElement(questID, questRewards) {
     const xpReward = document.createElement("li")
     xpReward.classList.add("view-quest-xp-reward")
     xpReward.innerText = `${questRewards.xp} XP`
+    xpReward.addEventListener("click", () => onEditReward(questID, xpReward, "xp"))
     list.appendChild(xpReward)
 
     if (parseInt(questRewards.epic) > 0) {
         const epicReward = document.createElement("li")
         epicReward.classList.add("view-quest-epic-reward")
         epicReward.innerText = `${questRewards.epic}`
+        epicReward.addEventListener("click", () => onEditReward(questID, epicReward, "epic"))
         list.appendChild(epicReward)
     }
     
@@ -190,6 +233,7 @@ function createRewardsListElement(questID, questRewards) {
         const rareReward = document.createElement("li")
         rareReward.classList.add("view-quest-rare-reward")
         rareReward.innerText = `${questRewards.rare}`
+        rareReward.addEventListener("click", () => onEditReward(questID, rareReward, "rare"))
         list.appendChild(rareReward)
     }
 

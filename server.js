@@ -31,13 +31,17 @@ app.get("/", (req, res) => {
 app.get("/commission", (req, res) => {
     res.sendFile(__dirname + "/frontend/index.html")
 })
+app.get("/quests", (req, res) => {
+    res.redirect("/")
+})
 app.get("/quests/:id", (req, res) => {
-    const id = req.params["id"]
     res.sendFile(__dirname + "/frontend/index.html")
 })
 
+// TODO: big input checking everywhere for safety
 io.on("connection", (socket) => {
     socket.on("add_quest", (data) => {
+        // TODO: check that numerical values dont contain text
         database.addQuest(data.title, data.description, data.objectives, data.rewards)
         const questData = database.getData()
         io.emit("update", questData)
@@ -87,6 +91,13 @@ io.on("connection", (socket) => {
         const questID = data["questID"]
         const objectiveIndex = data["objectiveIndex"]
         database.removeObjective(questID, objectiveIndex)
+        io.emit("update", database.getData())
+    })
+    socket.on("edit_reward", (data) => {
+        const questID = data["questID"]
+        const rewardType = data["rewardType"]
+        const rewardValue = data["rewardValue"]
+        database.editReward(questID, rewardType, rewardValue)
         io.emit("update", database.getData())
     })
 })

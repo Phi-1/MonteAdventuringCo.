@@ -243,6 +243,7 @@ input.view-quest-objective[type="text"] {
 
 .view-quest-objective.objective-complete {
     text-decoration: line-through;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .view-quest-mark-objective-complete {
@@ -268,6 +269,14 @@ input.view-quest-objective[type="text"] {
     display: inline-block;
     list-style: none;
     margin-left: 0.4rem;
+}
+
+.view-quest-rewards > input {
+    color: white;
+}
+
+input.view-quest-xp-reward {
+    background-color: rgba(0,0,0,0);
 }
 
 .view-quest-xp-reward {

@@ -105,6 +105,11 @@ const database = (() => {
             if (!questID in dbData.quests) return
             dbData.quests[questID].objectives[objectiveIndex].text = newObjectiveText
             saveData()
+        },
+        editReward: (questID, rewardType, rewardValue) => {
+            if (!questID in dbData.quests) return
+            dbData.quests[questID].rewards[rewardType] = parseInt(rewardValue)
+            saveData()
         }
     }
 })()
