@@ -1,20 +1,15 @@
 import { processURL } from "./routing.js"
 import { bindSocketEvent, sendSocketEvent } from "./socket.js"
 import { renderQuestList } from "./pages/questList.js"
-import { questData } from "./questData.js"
 import { renderViewQuest } from "./pages/viewQuest.js"
 import { renderAddQuest } from "./pages/addQuest.js"
 
 function onDataUpdate(data) {
-    // TODO: just pass questData into render functions instead of keeping globals
-    questData.quests = data["quests"]
-    questData.inventory = data["inventory"]
-    questData.activeQuest = data["activeQuest"]
 
     const [route, options] = processURL()
 
     if (route === "") {
-        renderQuestList()
+        renderQuestList(data["quests"], data["inventory"], data["activeQuest"])
     } else if (route === "commission") {
         renderAddQuest()
     } else if (route === "quests") {
@@ -22,7 +17,12 @@ function onDataUpdate(data) {
             window.alert("Quest ID not found")
             return
         }
-        renderViewQuest(options[0])
+        for (let quest of data["quests"]) {
+            if (quest.id !== options[0]) continue
+            renderViewQuest(quest, data["inventory"])
+            return
+        }
+        window.alert(`Quest with ID ${options[0]} does not exist`)
     }
 }
 

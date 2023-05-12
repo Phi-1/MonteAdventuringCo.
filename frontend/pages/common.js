@@ -1,4 +1,3 @@
-import { questData } from "../questData.js"
 
 const PAGE = document.querySelector(".page")
 
@@ -8,10 +7,10 @@ function clearPage() {
     }
 }
 
-function createInventoryElement() {
-    const xp = questData.inventory.xp
-    const epic = questData.inventory.epic
-    const rare = questData.inventory.rare
+function createInventoryElement(inventoryData) {
+    const xp = inventoryData.xp
+    const epic = inventoryData.epic
+    const rare = inventoryData.rare
 
     const inventory = document.createElement("nav")
     inventory.classList.add("inventory")

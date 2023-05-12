@@ -1,20 +1,4 @@
-/* data 
-quests: {
-    id: {
-        title,
-        description,
-        rewards,
-        objectives: [
-            text
-        ]
-    }
-}
-inventory: {
-    xp, ancient coins (epic), (rare)
-}
-active quest: id
-*/
-
+require("dotenv").config()
 const express = require("express")
 const app = express()
 const http = require("http")
@@ -40,70 +24,70 @@ app.get("/quests/:id", (req, res) => {
 
 // TODO: big input checking everywhere for safety
 io.on("connection", (socket) => {
-    socket.on("add_quest", (data) => {
+    socket.on("add_quest", async (data) => {
         // TODO: check that numerical values dont contain text
-        database.addQuest(data.title, data.description, data.objectives, data.rewards)
-        const questData = database.getData()
+        await database.addQuest(data.title, data.description, data.objectives, data.rewards)
+        const questData = await database.getData()
         io.emit("update", questData)
     })
-    socket.on("request_update", () => {
-        const questData = database.getData()
+    socket.on("request_update", async () => {
+        const questData = await database.getData()
         socket.emit("update", questData)
     })
-    socket.on("edit_title", (data) => {
+    socket.on("edit_title", async (data) => {
         const questID = data["questID"]
         const title = data["title"]
-        database.editTitle(questID, title)
-        io.emit("update", database.getData())
+        await database.editTitle(questID, title)
+        io.emit("update", await database.getData())
     })
-    socket.on("edit_description", (data) => {
+    socket.on("edit_description", async (data) => {
         const questID = data["questID"]
         const description = data["description"]
-        database.editDescription(questID, description)
-        io.emit("update", database.getData())
+        await database.editDescription(questID, description)
+        io.emit("update", await database.getData())
     })
-    socket.on("set_objective_state", (data) => {
+    socket.on("set_objective_state", async (data) => {
         const questID = data["questID"]
         const objectiveIndex = data["objective"]
         const completed = data["completed"]
-        database.setObjectiveState(questID, objectiveIndex, completed)
-        io.emit("update", database.getData())
+        console.log(await database.setObjectiveState(questID, objectiveIndex, completed))
+        io.emit("update", await database.getData())
     })
-    socket.on("complete_quest", (data) => {
+    socket.on("complete_quest", async (data) => {
         const id = data["id"]
-        database.completeQuest(id) // TODO: error checking
-        io.emit("update", database.getData())
+        await database.completeQuest(id) // TODO: error checking
+        io.emit("update", await database.getData())
     })
-    socket.on("edit_objective", (data) => {
+    socket.on("edit_objective", async (data) => {
         const questID = data["questID"]
         const objectiveIndex = data["objectiveIndex"]
         const objectiveText = data["objectiveText"]
-        database.editObjective(questID, objectiveIndex, objectiveText)
-        io.emit("update", database.getData())
+        await database.editObjective(questID, objectiveIndex, objectiveText)
+        io.emit("update", await database.getData())
     })
-    socket.on("add_objective", (data) => {
+    socket.on("add_objective", async (data) => {
         const questID = data["questID"]
         const objectiveText = data["objectiveText"]
-        database.addObjective(questID, objectiveText)
-        io.emit("update", database.getData())
+        await database.addObjective(questID, objectiveText)
+        io.emit("update", await database.getData())
     })
-    socket.on("delete_objective", (data) => {
+    socket.on("delete_objective", async (data) => {
         const questID = data["questID"]
         const objectiveIndex = data["objectiveIndex"]
-        database.removeObjective(questID, objectiveIndex)
-        io.emit("update", database.getData())
+        await database.removeObjective(questID, objectiveIndex)
+        io.emit("update", await database.getData())
     })
-    socket.on("edit_reward", (data) => {
+    socket.on("edit_reward", async (data) => {
         const questID = data["questID"]
         const rewardType = data["rewardType"]
         const rewardValue = data["rewardValue"]
-        database.editReward(questID, rewardType, rewardValue)
-        io.emit("update", database.getData())
+        await database.editReward(questID, rewardType, rewardValue)
+        io.emit("update", await database.getData())
     })
 })
 
-function main() {
-    database.init(__dirname + "/db.json")
+async function main() {
+    await database.init(process.env["DB_URL"])
     server.listen(7890, () => console.log("Server is listening on port 7890"))
 }
 

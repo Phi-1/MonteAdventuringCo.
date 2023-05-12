@@ -1,4 +1,3 @@
-import { questData } from "../questData.js"
 import { navigateToRoute } from "../routing.js"
 import {PAGE, clearPage, createInventoryElement} from "./common.js"
 
@@ -55,21 +54,22 @@ function createAddQuestElement() {
     return addQuest
 }
 
-export function renderQuestList(quests) {
+export function renderQuestList(quests, inventoryData, activeQuestID) {
+    // TODO: active quest
     clearPage()
-    const inventory = createInventoryElement()
+    const inventory = createInventoryElement(inventoryData)
     PAGE.appendChild(inventory)
     const questList = createQuestListElement()
     PAGE.appendChild(questList)
     const addQuest = createAddQuestElement()
     PAGE.appendChild(addQuest)
 
-    for (let quest in questData.quests) {
-        const id = quest
-        const title = questData.quests[quest]["title"]
-        const xp = questData.quests[quest]["rewards"]["xp"]
-        const epic = questData.quests[quest]["rewards"]["epic"]
-        const rare = questData.quests[quest]["rewards"]["rare"]
+    for (let quest of quests) {
+        const id = quest["id"]
+        const title = quest["title"]
+        const xp = quest["rewards"]["xp"]
+        const epic = quest["rewards"]["epic"]
+        const rare = quest["rewards"]["rare"]
         questList.appendChild(createQuestElement(id, title, xp, epic, rare))
     }
 }

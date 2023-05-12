@@ -1,4 +1,3 @@
-import { questData } from "../questData.js";
 import { navigateToRoute } from "../routing.js";
 import { sendSocketEvent } from "../socket.js";
 import { PAGE, clearPage, createInventoryElement, createMenu } from "./common.js";
@@ -264,14 +263,17 @@ function createMainElement(questID, questTitle, questDescription, questObjective
 
     const rewardsList = createRewardsListElement(questID, questRewards)
 
+    // TODO: delete quest button
+
     main.append(...[title, description, objectivesList, rewardsList])
     return main
 }
 
-export function renderViewQuest(questID) {
+export function renderViewQuest(quest, inventoryData) {
+    // TODO: on all edit functions, replace input element with standard element (and possibly colored border class) while database processes
     clearPage()
-    const inventory = createInventoryElement()
+    const inventory = createInventoryElement(inventoryData)
     PAGE.appendChild(inventory)
-    const main = createMainElement(questID, questData.quests[questID].title, questData.quests[questID].description, questData.quests[questID].objectives, questData.quests[questID].rewards)
+    const main = createMainElement(quest["id"], quest["title"], quest["description"], quest["objectives"], quest["rewards"])
     PAGE.appendChild(main)
 }
